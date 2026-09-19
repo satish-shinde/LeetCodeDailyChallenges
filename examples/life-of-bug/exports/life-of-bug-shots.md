@@ -1,0 +1,13 @@
+- 01 egg-hero: Macro illustrated egg capsule on warm cream/peach scientific plate.
+- 02 egg-blueprint: Blueprint egg interior with hex lattice, green gene stripes, and dendrogram.
+- 03 larva-hatch: Egg cracks and larva crawls out with segmented peristaltic motion.
+- 04 larva-blueprint: Schematic larval program showing segment growth and internal signaling.
+- 05 pupa-form: Larva contracts and hardens into attached puparium.
+- 06 pupa-blueprint: Internal tissue remodeling map inside the pupa case.
+- 07 eclosion-open: Adult fly emerges with red eyes and inflating translucent wings.
+- 08 eclosion-blueprint: Wing expansion and fluid routing in blueprint network form.
+- 09 adult-first-flight: Newly emerged adult makes first controlled flight arc.
+- 10 flight-blueprint: Neural flight-control network pulses through wing control loops.
+- 11 mating-courtship: Two adults perform wing-song courtship and pair.
+- 12 mating-blueprint: Fertility cascade closes the progress glyph cycle.
+- 13 sunrise-window: Warm sunrise through a window closes the film with a gentle loop.
