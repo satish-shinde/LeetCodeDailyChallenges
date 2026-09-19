@@ -1315,7 +1315,8 @@
   // below derives from FILM.TIMELINE, so it runs at any bpm and duration.
   const CH = {
     home: ['D3', 'A3', 'D4', 'F#4'],
-    away: ['G3', 'B3', 'D4', 'G4'],
+    warm: ['E3', 'B3', 'E4', 'G#4'],
+    cool: ['A2', 'E3', 'A3', 'C#4'],
   };
 
   function score(E, I) {
@@ -1325,16 +1326,39 @@
     const BAR = 240 / bpm;
     const BEAT = 60 / bpm;
     const motif = ['D5', 'F#5', 'A5', 'E5'];
+
     for (let beat = 0; beat * BEAT < DUR - 1e-9; beat++) {
       const t = Math.round(beat * BEAT * 1000) / 1000;
       const down = beat % 4 === 0;
-      kick(t, down ? 0.8 : 0.5, down ? 'full' : 'felt');
-      hat(t + BEAT / 2, 0.1);
-      kalimba(t + BEAT / 2, hz(motif[beat % 4]), 0.2, { hall: 0.15, delay: 0.1, pan: beat % 2 ? 0.15 : -0.15 });
+      kick(t, down ? 0.45 : 0.2, down ? 'felt' : 'thud');
+      hat(t + BEAT / 2, down ? 0.06 : 0.09);
+      kalimba(t + BEAT / 2, hz(motif[beat % 4]), 0.11, { hall: 0.08, delay: 0.08, pan: beat % 2 ? 0.12 : -0.12 });
       if (down) {
-        const home = beat % 8 === 0;
-        pad(t, Math.min(t + BAR, DUR), home ? CH.home : CH.away, 0.28, { att: 0.05, rel: 0.1, cut0: 900, cut1: 1400, hall: 0.15 });
-        sub(t, Math.min(t + BAR, DUR), home ? 'D2' : 'G1', 0.4, { att: 0.02, rel: 0.08 });
+        const sec = t / DUR;
+        const chord = sec < 0.32 ? CH.home : sec < 0.65 ? CH.cool : CH.warm;
+        const root = sec < 0.32 ? 'D2' : sec < 0.65 ? 'A1' : 'E2';
+        pad(t, Math.min(t + BAR, DUR), chord, 0.22, { att: 0.04, rel: 0.08, cut0: 800, cut1: 1500, hall: 0.12 });
+        sub(t, Math.min(t + BAR, DUR), root, 0.25, { att: 0.01, rel: 0.06 });
+      }
+    }
+
+    const cues = (FILM.TIMELINE && FILM.TIMELINE.cues) || [];
+    for (let i = 0; i < cues.length; i++) {
+      const c = cues[i];
+      const t = c.t;
+      if (t < 0 || t >= DUR) continue;
+      if (c.kind === 'hit') {
+        kick(t, 0.72, 'full');
+        kalimba(t, hz(motif[i % motif.length]), 0.26, { hall: 0.2, delay: 0.14 });
+      } else if (c.kind === 'cut') {
+        kalimba(t, hz('D6'), 0.22, { hall: 0.24, delay: 0.1 });
+      } else if (c.kind === 'sfx') {
+        hat(t, 0.22);
+        kalimba(t + 0.02, hz(i % 2 ? 'A5' : 'E5'), 0.13, { hall: 0.1, delay: 0.05, pan: i % 2 ? 0.18 : -0.18 });
+      } else if (c.kind === 'swell') {
+        const end = Math.min(DUR, t + BEAT * 2);
+        hat(t, 0.12);
+        pad(t, end, i % 2 ? CH.cool : CH.warm, 0.18, { att: 0.01, rel: 0.18, cut0: 700, cut1: 1800, hall: 0.22 });
       }
     }
   }
